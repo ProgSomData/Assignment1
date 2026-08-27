@@ -41,8 +41,15 @@ let rec eval e (env : (string * int) list) : int =
     | Prim("+", e1, e2) -> eval e1 env + eval e2 env
     | Prim("*", e1, e2) -> eval e1 env * eval e2 env
     | Prim("-", e1, e2) -> eval e1 env - eval e2 env
+    | Prim("==", e1, e2)-> if eval e1 env = eval e2 env then 1 else 0
+    | Prim("max", e1, e2) -> if eval e1 env > eval e2 env then eval e1 env else eval e2 env
+    | Prim("min", e1, e2) -> if eval e1 env < eval e2 env then eval e1 env else eval e2 env 
     | Prim _            -> failwith "unknown primitive";;
 
+let e4 = Prim("==", Var "a", Var "a")
+
+
+let e1v = eval e4 env;;
 let e1v  = eval e1 env;;
 let e2v1 = eval e2 env;;
 let e2v2 = eval e2 [("a", 314)];;
