@@ -33,6 +33,7 @@ let e3 = Prim("+", Prim("*", Var "b", CstI 9), Var "a");;
 let e4 = Prim ("max", (Prim("+", CstI 5, CstI 10)), (CstI 16))
 (* Evaluation within an environment *)
 
+//1.1(i + iii-v)
 let rec eval e (env : (string * int) list) : int =
     match e with
     | CstI i -> i
@@ -64,7 +65,7 @@ let rec eval e (env : (string * int) list) : int =
     // | Prim _            -> failwith "unknown primitive";;
 
 
-//(V test)
+//1.1 (v test)
 let env2: (string * int) list = [("a", 1); ("b", 1)]
 let env3: (string * int) list = [("a", 1); ("b", 2)]
 let e5 = Prim("==", Var "a", Var "b")
@@ -82,7 +83,7 @@ let e3v  = eval e3 env;;
 
 
 
-// 1.2 (i)
+//1.2 (i)
 type aexpr = 
     | CstI of int
     | Var of string
@@ -90,11 +91,11 @@ type aexpr =
     | Mul of aexpr * aexpr 
     | Sub of aexpr * aexpr
 
-// 1.2 (ii)
+//1.2 (ii)
 Sub(Var "v", Add(Var "w", Var "z"))
 Mul (CstI 2, Sub(Var "v", Add(Var "w", Var "z")))
 
-// 1.2 (iii)
+//1.2 (iii)
 let rec fmt (e : aexpr) : string = 
     match e with
     | CstI i -> string i
@@ -105,7 +106,7 @@ let rec fmt (e : aexpr) : string =
     | _ -> failwith "unknown aexpr"
 
 
-// 1.2 (iv)
+//1.2 (iv)
 let rec simplify (e : aexpr) : aexpr = 
     match e with
     | Add(CstI 0, e) -> e
@@ -118,7 +119,7 @@ let rec simplify (e : aexpr) : aexpr =
     | Sub(e, e1) when e = e1 -> CstI 0
     | _ -> e
 
-// 1.2 (v)
+//1.2 (v)
 let rec symDiff (x : string) (e : aexpr) : aexpr =
     match e with
     | CstI i -> CstI 0
