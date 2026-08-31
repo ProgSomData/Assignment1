@@ -8,14 +8,15 @@
 module Intcomp1
 
 type expr = 
-  | CstI of int
-  | Var of string
-  | Let of string * expr * expr
-  | Prim of string * expr * expr;;
+    | CstI of int
+    | Var of string
+//  | Let of string * expr * expr
+    | Let of (string * expr) list * expr
+    | Prim of string * expr * expr
 
 (* Some closed expressions: *)
 
-let e0 = Prim("+", CstI 17, Prim("+", CstI 5, CstI 7));;
+(* let e0 = Prim("+", CstI 17, Prim("+", CstI 5, CstI 7));;
 let e1 = Let("z", CstI 17, Prim("+", Var "z", Var "z"));;
 
 let e2 = Let("z", CstI 17, 
@@ -36,7 +37,7 @@ let e7 = Let("z", CstI 3, Let("y", Prim("+", Var "z", CstI 1), Prim("+", Var "z"
 let e8 = Let("z", Let("x", CstI 4, Prim("+", Var "x", CstI 5)), Prim("*", Var "z", CstI 2))
 let e9 = Let("z", CstI 3, Let("y", Prim("+", Var "z", CstI 1), Prim("+", Var "x", Var "y")))
 let e10 = Let("z", Prim("+", Let("x", CstI 4, Prim("+", Var "x", CstI 5)), Var "x"), Prim("*", Var "z", CstI 2))
-
+ *)
 (* ---------------------------------------------------------------------- *)
 
 (* Evaluation of expressions with variables and bindings *)
@@ -50,14 +51,34 @@ let rec eval e (env : (string * int) list) : int =
     match e with
     | CstI i            -> i
     | Var x             -> lookup env x 
-    | Let(x, erhs, ebody) -> 
-      let xval = eval erhs env
-      let env1 = (x, xval) :: env 
-      eval ebody env1
+//  | Let(x, erhs, ebody) -> 
+    //   let xval = eval erhs env
+    //   let env1 = (x, xval) :: env 
+    //   eval ebody env1
+    //2.1
+    | Let (xs, ebody) ->
+        //helper function that binds all x's in the list, since eval wont on a list
+        let rec aux bindings env = 
+            match bindings with
+            | [] -> env
+            | (x, erhs) :: xs -> 
+                let xval = eval erhs env
+                let env1 = (x, xval) :: env
+                aux xs env1
+        let finalEnv = aux xs env
+        eval ebody finalEnv
     | Prim("+", e1, e2) -> eval e1 env + eval e2 env
     | Prim("*", e1, e2) -> eval e1 env * eval e2 env
     | Prim("-", e1, e2) -> eval e1 env - eval e2 env
     | Prim _            -> failwith "unknown primitive";;
+
+//2.6
+(*
+    We assume that what 2.6 asks us to do is use List.Map to run through all xs
+    at the same time with env, then afterwards we append the new list to the front of the old env.
+    Couldn't find enough time to finish the optional exercise.
+*)
+
 
 let run e = eval e [];;
 let res = List.map run [e1;e2;e3;e4;e5;e7]  (* e6 has free variables *)
@@ -213,9 +234,18 @@ let rec freevars e : string list =
     match e with
     | CstI i -> []
     | Var x  -> [x]
-    | Let(x, erhs, ebody) -> 
-          union (freevars erhs, minus (freevars ebody, [x]))
+    // | Let(x, erhs, ebody) -> 
+    //       union (freevars erhs, minus (freevars ebody, [x]))
+    //2.2
+    | Let (xs, ebody) ->
+        let rec aux bindings  ebody : string list =
+            match bindings with
+            | [] -> freevars ebody
+            | (x, erhs) :: xs ->
+                union (freevars erhs, minus (aux xs ebody, [x]))
+        aux  xs ebody
     | Prim(ope, e1, e2) -> union (freevars e1, freevars e2);;
+
 
 (* Alternative definition of closed *)
 
@@ -247,9 +277,20 @@ let rec tcomp (e : expr) (cenv : string list) : texpr =
     match e with
     | CstI i -> TCstI i
     | Var x  -> TVar (getindex cenv x)
-    | Let(x, erhs, ebody) -> 
-      let cenv1 = x :: cenv 
-      TLet(tcomp erhs cenv, tcomp ebody cenv1)
+    // | Let(x, erhs, ebody) -> 
+    //   let cenv1 = x :: cenv 
+    //   TLet(tcomp erhs cenv, tcomp ebody cenv1)
+    //2.3
+    | Let (xs, ebody) ->
+        let rec aux bindings ebody cenv = 
+            match bindings with
+            | [] -> tcomp ebody cenv
+            | (x, erhs) :: xs ->
+                let xval = tcomp erhs cenv
+                let cenv1 = x :: cenv
+                TLet (xval, aux xs ebody cenv1)
+        aux xs ebody cenv
+
     | Prim(ope, e1, e2) -> TPrim(ope, tcomp e1 cenv, tcomp e2 cenv);;
 
 (* Evaluation of target expressions with variable indexes.  The
