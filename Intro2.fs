@@ -126,6 +126,3 @@ let rec symDiff (x : string) (e : aexpr) : aexpr =
     | Add(e1, e2) -> Add(symDiff x e1, symDiff x e2) 
     | Mul(e1, e2) -> Add((Mul(symDiff x e1, e2)),(Mul(e1, symDiff x e2)))
     | Sub(e1, e2) -> Sub(symDiff x e1, symDiff x e2)
-
-// 1.4 (v)
-

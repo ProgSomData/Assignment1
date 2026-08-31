@@ -1,5 +1,0 @@
-C:\Users\dajap\OneDrive\ITU\5. semester\Programmer som data\Assignments\Assignment1\obj\Debug\net10.0\Assignment01.fsproj.AssemblyReference.cache
-C:\Users\dajap\OneDrive\ITU\5. semester\Programmer som data\Assignments\Assignment1\obj\Debug\net10.0\Assignment01.AssemblyInfoInputs.cache
-C:\Users\dajap\OneDrive\ITU\5. semester\Programmer som data\Assignments\Assignment1\obj\Debug\net10.0\Assignment01.AssemblyInfo.fs
-C:\Users\dajap\OneDrive\ITU\5. semester\Programmer som data\Assignments\Assignment1\obj\Debug\net10.0\Assignment01.fsproj.CoreCompileInputs.cache
-C:\Users\dajap\OneDrive\ITU\5. semester\Programmer som data\Assignments\Assignment1\obj\Debug\net10.0\Assignment01.sourcelink.json

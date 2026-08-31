@@ -141,7 +141,8 @@ class exercise14 {
                         new CstI (15), new Sub(
                             new CstI (25), new CstI (12))), new CstI (13));
         System.out.println(e3);
-
+        
+        // 1.4(iv)
         Expr e4 = new Add(new Var ("b"), new CstI (15));
         System.out.println(e4);
         
