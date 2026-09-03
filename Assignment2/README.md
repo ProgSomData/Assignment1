@@ -1,4 +1,4 @@
-# Assignment 1
+# Assignment 2
 
 For all exercises, we have commented out old code and added our new solutions in the lines underneath.
 We have commented in each file where an assignment is answered:
